@@ -1,7 +1,0 @@
-name = "pillow-talk-gemini-proxy"
-main = "worker.ts"
-compatibility_date = "2026-01-01"
-
-[vars]
-ALLOWED_ORIGIN = "*"
-# Set GEMINI_API_KEY safely via: npx wrangler secret put GEMINI_API_KEY

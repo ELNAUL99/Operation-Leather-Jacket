@@ -50,22 +50,19 @@ npm test
 npx --yes tsx --test src/cases/solver.test.ts
 ```
 
-### 3. Production Build & Static Hosting (`/proxy` Cloudflare Worker)
+### 3. Live Deployment (Cloud Run / AI Studio)
+
+**▶ Play it now:** <https://pillow-talk-an-envydia-investigation-658887858548.europe-west3.run.app>
+
+PILLOW TALK runs **full-stack** on Cloud Run / AI Studio — `server.ts` serves the built client *and* holds the Gemini key server-side via `/api/ai`, so the browser never sees it. Set `GEMINI_API_KEY` as a secret on the service (AI Studio injects it automatically at runtime).
 
 ```bash
-npm run lint
-npm run build
-npm start
+npm run lint    # tsc --noEmit
+npm run build   # vite build -> dist/
+npm start       # NODE_ENV=production tsx server.ts (serves dist/ + /api/ai)
 ```
 
-For static GitHub Pages deployment (`.github/workflows/deploy.yml`), deploy the optional Cloudflare Worker in `/proxy`:
-
-```bash
-npx wrangler secret put GEMINI_API_KEY --config proxy/wrangler.toml
-npx wrangler deploy --config proxy/wrangler.toml
-```
-
-Then set `VITE_AI_PROXY_URL` in your repository variables. You can also toggle **Offline Mode** anytime on the Title Screen or Options modal for a zero-network demo powered by the 3 verified handwritten dossiers in `src/cases/handwrittenCases.ts`.
+**Offline Mode needs no key** — toggle it on the Title Screen or Options modal for a zero-network demo powered by the 3 verified handwritten dossiers in `src/cases/handwrittenCases.ts`.
 
 ---
 

@@ -2,7 +2,7 @@
  * Central AI Gateway (src/ai/llm.ts)
  * Keeps all Case Forge, Suspect Minds, and ORBIT Scan LLM calls behind a single resilient boundary:
  * - Zero response caching or memoisation (`cache: 'no-store'`)
- * - Optional custom Proxy URL stored in `sessionStorage` ("Advanced" settings), defaulting to `/api/ai`
+ * - All AI calls target the same-origin full-stack backend at `/api/ai` (server holds the key)
  * - Sends full system brief + last 6 suspect transcript turns + shared GOSSIP LOG + player's NEW question
  * - Logs exact Suspect request body to console in dev mode
  * - >70% token-overlap repeat guard (regenerates once with new-wording instruction)
@@ -34,46 +34,10 @@ import {
   TranscriptEntry,
 } from '../shared/types';
 
-const PROXY_STORAGE_KEY = 'pt_custom_proxy_url';
 const STREAM_TIMEOUT_MS = 16000;
 const FORGE_BUDGET_MS = 16000;
 
-export function getSessionProxyUrl(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return (window.sessionStorage.getItem(PROXY_STORAGE_KEY) ?? '').trim();
-  } catch {
-    return '';
-  }
-}
-
-export function setSessionProxyUrl(url: string): void {
-  if (typeof window === 'undefined') return;
-  try {
-    const trimmed = url.trim().replace(/\/$/, '');
-    if (trimmed) {
-      window.sessionStorage.setItem(PROXY_STORAGE_KEY, trimmed);
-    } else {
-      window.sessionStorage.removeItem(PROXY_STORAGE_KEY);
-    }
-  } catch {
-    // Ignore storage quota errors
-  }
-}
-
 function getActiveApiBase(): string {
-  const sessionOverride = getSessionProxyUrl();
-  if (sessionOverride) {
-    return sessionOverride.replace(/\/$/, '');
-  }
-  const configuredStaticProxy = (import.meta.env.VITE_AI_PROXY_URL || '').trim().replace(/\/$/, '');
-  if (
-    configuredStaticProxy &&
-    typeof window !== 'undefined' &&
-    /\.(github\.io|pages\.dev|netlify\.app)$/i.test(window.location.hostname)
-  ) {
-    return configuredStaticProxy;
-  }
   return '/api/ai';
 }
 

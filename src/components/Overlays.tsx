@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getSessionProxyUrl, setSessionProxyUrl } from '../ai/llm';
 import { AccessibilitySettings, SfxCaption } from '../shared/types';
 import { OrbitDieSvg } from './PictogramSvg';
 
@@ -92,12 +91,6 @@ export const AccessibilityModal: React.FC<{
   onClose: () => void;
 }> = ({ settings, seedInput, onSeedChange, onChange, onClose }) => {
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [proxyUrl, setProxyUrl] = useState(() => getSessionProxyUrl());
-
-  const handleProxyChange = (val: string) => {
-    setProxyUrl(val);
-    setSessionProxyUrl(val);
-  };
 
   return (
     <div
@@ -197,7 +190,7 @@ export const AccessibilityModal: React.FC<{
             </button>
           </div>
 
-          {/* Collapsible Advanced Disclosure (Optional Proxy URL + Optional Case Seed) */}
+          {/* Collapsible Advanced Disclosure (Optional Case Seed) */}
           <div className="pt-3 border-t-2 border-[#111111]">
             <button
               type="button"
@@ -211,23 +204,6 @@ export const AccessibilityModal: React.FC<{
 
             {advancedOpen && (
               <div className="mt-3 space-y-3 p-3 rounded-lg bg-[#111111] border border-[#8A8A8E]/40">
-                <div>
-                  <label
-                    htmlFor="custom-proxy-url-input"
-                    className="block font-mono-label text-[10px] text-[#8A8A8E] mb-1"
-                  >
-                    OPTIONAL PROXY URL (SESSION ONLY — LEAVE BLANK FOR BUILT-IN /API/AI)
-                  </label>
-                  <input
-                    id="custom-proxy-url-input"
-                    type="url"
-                    value={proxyUrl}
-                    onChange={(e) => handleProxyChange(e.target.value)}
-                    placeholder="https://your-optional-worker.example.workers.dev"
-                    className="w-full px-3 py-2 rounded bg-[#0A0A0B] border-2 border-[#8A8A8E] text-[#F2F2EE] font-mono-code text-xs focus:outline-none focus:border-[#C8242B]"
-                  />
-                </div>
-
                 <div>
                   <label
                     htmlFor="advanced-case-seed-input"
