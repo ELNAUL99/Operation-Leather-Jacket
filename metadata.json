@@ -1,0 +1,6 @@
+{
+  "name": "Pillow Talk: An Envydia Investigation",
+  "description": "A dry noir 2D side-scrolling investigation and AI social-deduction game. Interrogate five suspects in the CEO's penthouse, uncover who doesn't know the secret launch fact, and verify if your AI sidekick ORBIT is framing an innocent.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
